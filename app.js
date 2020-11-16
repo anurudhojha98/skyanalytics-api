@@ -53,11 +53,12 @@ io.on('connection', function (socket) {
   console.log("Connected succesfully to the socket ...");
 
   socket.on('new-stock', (data) => {
-    // console.log(data);
-    // socket.emit('new-stock',data);
     stocksService.addStocks(data).then(resData=>{
-        //  console.log(resData);
-         socket.emit('new-stock',JSON.parse(JSON.stringify(resData)));
+      let data=JSON.parse(JSON.stringify(resData));
+         delete data.createdAt;
+         delete data.updatedAt;
+         delete data.__v;
+         io.emit('new-stock1',data);
      })
   });
 });
